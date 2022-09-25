@@ -60,3 +60,4 @@ func main() {
     })
 }
 ```
+NOTE: `github.com/KarelKubat/whatsmeow/handlers` currently doesn't support per-client handlers. All event handlers are global; once registered, they apply to all `whatsmeow.Client`s.
