@@ -12,6 +12,7 @@ Why may this be handy? If you run the original reference client https://godocs.i
 
 - `github.com/KarelKubat/whatsmeow/handlers` adds an `EventType` that enumerates the kinds of events;
 - Event handlers are structured differently; they "bind" themselves to a given event type when registering;
+- You can bind multiple handlers to one event. If so, they are all executed (in order of binding).
 - Event dispatching is driven by the registry of available handlers. The dispatcher determines the type of the event and calls the appropriate handler(s).
 
 ### Anatomy of a handler
