@@ -60,7 +60,7 @@ Dispatching occurs through `handlers.Dispatch()`. This method matches an event a
 
 The dispatch error (if any) has a field `Type` which is set to either:
 - `NoHandlerFound`: there was no registered handler for this event. You might not install handlers for all possible events and want to ignore this error.
-- `HandlerFailed`: A handler for the given event returned an error.
+- `HandlerFailed`: A handler for the given event returned an error. When multiple handlers are bound to an event type, then the serial execution of the handlers stops when once one of them errors out.
 - `UnknownEvent`: The dispatcher isn't configured to handle the event. This is a bug or it may mean that a new event type was implemented by https://github.com/tulir/whatsmeow/tree/main/types/events that the dispatcher doesn't know (yet).
 
 The dispatcher is set as the callback as shown in in https://pkg.go.dev/go.mau.fi/whatsmeow#Client.AddEventHandler. The default `whatsmeow.EventHandler` type doesn't want an error return, so we can use an intermediate function:
