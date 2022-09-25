@@ -4,7 +4,11 @@ This is my "handy package of stuff" to make the (excellent) Whatsapp Go library 
 
 ## Handlers
 
-`github.com/KarelKubat/whatsmeow/handlers` adds typed events, handler registration and by-type-dispatching to event handlers that you provide. To use it, instantiate a `whatsmeow` client as shown in https://pkg.go.dev/go.mau.fi/whatsmeow#NewClient. But event handlers are structured differently. Here is a canonical example of a simple `Message` handler:
+`github.com/KarelKubat/whatsmeow/handlers` adds typed events, handler registration and by-type-dispatching to event handlers that you provide. To use it, instantiate a `whatsmeow` client as shown in https://pkg.go.dev/go.mau.fi/whatsmeow#NewClient. But event handlers are structured differently. 
+
+### Anatomy of a handler
+
+Here is a simple example of a simple `Message` handler:
 
 ```go
 package message
@@ -38,6 +42,10 @@ func (h *handler) Handle(ev interface{}) error {
 }
 ```
 
+A more complete handler for the type `events.Message` can be found in https://github.com/KarelKubat/whapp/blob/main/handlers/message/message.go.
+
+### Dispatching
+
 For the dispatching part, `handlers.Dispatch()` is set as the callback in https://pkg.go.dev/go.mau.fi/whatsmeow#Client.AddEventHandler. The default `EventHandler` type doesn't want an error return, so we can use an intermediate function:
 
 ```go
@@ -61,6 +69,9 @@ func main() {
     })
 }
 ```
+
+For a real life example, see https://github.com/KarelKubat/whapp/blob/main/whapp.go.
+
 NOTE: `github.com/KarelKubat/whatsmeow/handlers` currently doesn't support per-client handlers. All event handlers are global; once registered, they apply to all `whatsmeow.Client`s.
 
 ## File Logging
