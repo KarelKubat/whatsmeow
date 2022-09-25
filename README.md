@@ -75,10 +75,16 @@ func main() {
     client := whatsmeow.NewClient(deviceStore, nil)
     client.AddEventHandler(func(e interface{}) {
         if err := handlers.Dispatch(e); err != nil {
-            // Silently ignore when there is not a handler for this event. Else,
-            // print the error.
-            if err.Type == handlers.HandlerFailed {
+            // Silently ignore when there is not a handler for this event.
+            // If the dispatcher doesn't know of this event, pull the emergency brake.
+            // If the handler returned an error, print it.
+            switch err.Type {
+            case handlers.NoHandlerFound:
+                return nil
+            case handlers.HandlerFailed:
                 fmt.Fprintln(os.Stderr, err)
+            case handlers.UnknownEvent:
+                panic(err)
             }
         }
     })
