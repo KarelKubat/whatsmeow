@@ -1,4 +1,4 @@
-# Tooliing on top of `go.mau.fi/whatsmeow`
+# Tooling on top of `go.mau.fi/whatsmeow`
 
 This is my "handy package of stuff" to make the (excellent) Whatsapp Go library `go.mau.fi/whatsmeow` more usable in my programs.
 
