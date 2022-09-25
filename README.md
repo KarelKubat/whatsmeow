@@ -4,7 +4,10 @@ This is my "handy package of stuff" to make the (excellent) Whatsapp Go library 
 
 ## Handlers
 
-`github.com/KarelKubat/whatsmeow/handlers` adds typed events, handler registration and by-type-dispatching to event handlers that you provide. To use it, instantiate a `whatsmeow` client as shown in https://pkg.go.dev/go.mau.fi/whatsmeow#NewClient. But event handlers are structured differently. 
+`github.com/KarelKubat/whatsmeow/handlers` adds typed events, handler registration and by-type-dispatching to event handlers that you provide. The usage is very similar to the `whatsmeow` client as shown in https://pkg.go.dev/go.mau.fi/whatsmeow#NewClient. But:
+
+- Event handlers are structured differently; they are bound to a specific type and they "bind" themselves to that type when registering;
+- Event dispatching is driven by the registry of available handlers.
 
 ### Anatomy of a handler
 
@@ -30,8 +33,7 @@ func init() {
 
 // Handle is invoked when a `handlers.Message` event is seen.
 func (h *handler) Handle(ev interface{}) error {
-    // The argument `ev` is an opaque event. The event handler must convert it to a
-    // suitable type.
+    // The argument `ev` is opaque. The event handler must convert it to a suitable type.
     m := ev.(*events.Message)
 
     // See the `events.Message` type for the usable fields.
@@ -76,7 +78,7 @@ NOTE: `github.com/KarelKubat/whatsmeow/handlers` currently doesn't support per-c
 
 ## File Logging
 
-`github.com/KarelKubat/whatsmeow/logger` implements the interface `go.mau.fi/whatsmeow/util/log` but instead of sending logging to `stdout`, it is sent to a file.
+`github.com/KarelKubat/whatsmeow/logger` implements the interface `go.mau.fi/whatsmeow/util/log` but instead of sending logging to `stdout`, it is sent to a file. The file can be "rotated-away" in the middle of a run; the logger ensures that when the logfile disappears, a new one is created.
 
 Example:
 
