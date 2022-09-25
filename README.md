@@ -43,6 +43,7 @@ For the dispatching part, `handlers.Dispatch()` is set as the callback in https:
 ```go
 import (
     "github.com/KarelKubat/whatsmeow/handlers"
+
     "go.mau.fi/whatsmeow"
 )
 func main() {
@@ -61,3 +62,49 @@ func main() {
 }
 ```
 NOTE: `github.com/KarelKubat/whatsmeow/handlers` currently doesn't support per-client handlers. All event handlers are global; once registered, they apply to all `whatsmeow.Client`s.
+
+## File Logging
+
+`github.com/KarelKubat/whatsmeow/logger` implements the interface `go.mau.fi/whatsmeow/util/log` but instead of sending logging to `stdout`, it is sent to a file.
+
+Example:
+
+```go
+import (
+    "github.com/KarelKubat/whatsmeow/logger"
+    "go.mau.fi/whatsmeow"
+    "go.mau.fi/whatsmeow/store/sqlstore"
+
+    _ "github.com/mattn/go-sqlite3"    
+)
+
+const (
+    logfile = "/tmp/my.log"
+)
+
+func main() {
+    // Base logger, without a module name.
+    baseLogger, err := logger.New(logger.Opts{
+        Filename: logfile,  // file to send messages to
+        Verbose:  true,     // when true, debug messages are sent too
+        Append:   true,     // when true, previous logs are not overwritten but appended to
+    })
+    if err != nil { handleError(err) }
+    // Sub loggers populate the messages with a module name.
+    dbLogger := baseLogger.Sub("Database")
+    clLogger := baseLogger.Sub("Client")
+
+    // Store instantiation
+    container, err := sqlstore.New("sqlite3", "file:store.db?_foreign_keys=on", dbLogger)
+    store, err := container.GetFirstDevice()
+
+    // Client instantiation
+    client := whatsmeow.NewClient(store, clLogger)
+
+    // ...
+}
+```
+
+After this, database actions and client actions will be logged to `/tmp/my.log`.
+
+NOTE: This package supports neither opening loggers for different files (everything must go to one file), nor modifying the verbosity level. This can of course be implemented.
