@@ -10,8 +10,9 @@ Why may this be handy? If you run the original reference client https://godocs.i
 
 `github.com/KarelKubat/whatsmeow/handlers` adds typed events, handler registration and by-type-dispatching to event handlers that you provide. The usage is very similar to the `whatsmeow` client as shown in https://pkg.go.dev/go.mau.fi/whatsmeow#NewClient. But:
 
-- Event handlers are structured differently; they are bound to a specific type and they "bind" themselves to that type when registering;
-- Event dispatching is driven by the registry of available handlers.
+- `github.com/KarelKubat/whatsmeow/handlers` adds an `EventType` that enumerates the kinds of events;
+- Event handlers are structured differently; they "bind" themselves to a given event type when registering;
+- Event dispatching is driven by the registry of available handlers. The dispatcher determines the type of the event and calls the appropriate handler(s).
 
 ### Anatomy of a handler
 
