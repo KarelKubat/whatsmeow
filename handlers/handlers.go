@@ -167,6 +167,7 @@ const (
 
 	NoHandlerFound
 	HandlerFailed
+	UnknownEvent
 
 	lastDispatchError // Keep at last slot for tests
 )
@@ -176,6 +177,7 @@ func (d dispatchErrorType) String() string {
 		"",
 		"NoHandlerFound",
 		"HandlerFailed",
+		"UnknownEvent",
 	}[d]
 }
 
@@ -212,7 +214,11 @@ func (d *DispatchError) Error() string {
 // `err.Err` being the underlying error, and `err.Error()` stating the handler's error.
 // Invoking handlers stops when a handler returns an error; i.e., a second handler may not run
 // if the first handler fails.
-func Dispatch(evt interface{}) error {
+//
+// When `Dispatch()` returns `err.Type == UnknownEvent` then the event couldn't be mapped to
+// an existing type. Probably the code of this module is wrong or `go.mau.fi/whatsmeow/types/events`
+// has a new type that `Dispatch()` is not yet aware of.
+func Dispatch(evt interface{}) *DispatchError {
 	switch v := evt.(type) {
 	case *events.AppState:
 		return dispatch(AppState, v)
@@ -309,11 +315,14 @@ func Dispatch(evt interface{}) error {
 	case *events.UnknownCallEvent:
 		return dispatch(UnknownCallEvent, v)
 	default:
-		return fmt.Errorf("unknown event %+v, can't dispatch", v)
+		return &DispatchError{
+			Type: UnknownEvent,
+			Err:  fmt.Errorf("unknown event %+v, can't dispatch", v),
+		}
 	}
 }
 
-func dispatch(t EventType, ev interface{}) error {
+func dispatch(t EventType, ev interface{}) *DispatchError {
 	if handlers, ok := registry[t]; ok {
 		for _, h := range handlers {
 			if err := h.Handle(ev); err != nil {
