@@ -30,7 +30,9 @@ import (
 // The receiver can be a private, empty struct (or can hold data for processing a message).
 type handler struct{}
 
-// init() ensures the registration at start-up.
+// init() ensures the registration at start-up. Just add:
+//  import _ "path/to/handler"
+// to your codebase.
 func init() {
     handlers.Register(handlers.Message, &handler{})
 }
