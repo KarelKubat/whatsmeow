@@ -31,7 +31,7 @@ import (
 type handler struct{}
 
 // init() ensures the registration at start-up. Just add:
-//  import _ "path/to/handler"
+//  import _ "path/to/myhandlers/message"
 // to your codebase.
 func init() {
     handlers.Register(handlers.Message, &handler{})
