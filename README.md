@@ -1,5 +1,12 @@
 # Tooling on top of `go.mau.fi/whatsmeow`
 
+<!-- toc -->
+- [Handlers](#handlers)
+  - [Anatomy of a handler](#anatomy-of-a-handler)
+  - [Dispatching](#dispatching)
+- [File Logging](#file-logging)
+<!-- /toc -->
+
 This is my "handy package of stuff" to make the (excellent) Whatsapp Go library `go.mau.fi/whatsmeow` more usable in my programs.
 
 Why may this be handy? If you run the original reference client https://godocs.io/go.mau.fi/whatsmeow#example-package then:
